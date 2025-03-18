@@ -13,6 +13,7 @@ class Client extends Model
         'mobile',
         'email',
         'password',
+        'role',
     ];
 
     protected static function boot()
@@ -20,7 +21,10 @@ class Client extends Model
         parent::boot();
 
         static::creating(function ($client) {
+
+
             $client->password = bcrypt($client->password);
         });
     }
 }
+

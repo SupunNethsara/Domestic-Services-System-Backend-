@@ -14,13 +14,16 @@ class Workers extends Model
         'mobile',
         'email',
         'password',
+        'role',
     ];
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($client) {
-            $client->password = bcrypt($client->password);
+        static::creating(function ($worker) {
+
+
+            $worker->password = bcrypt($worker->password);
         });
     }
 }
