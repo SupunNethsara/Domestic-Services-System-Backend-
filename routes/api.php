@@ -9,3 +9,4 @@ Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 
 
+Route::post('/createprofile', [\App\Http\Controllers\ProfileController::class, 'createProfile']);
