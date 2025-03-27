@@ -68,6 +68,21 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
+    public function worker()
+    {
+        return $this->hasOne(Workers::class);
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+
     protected function casts(): array
     {
         return [
@@ -75,4 +90,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }

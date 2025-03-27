@@ -9,4 +9,15 @@ Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 
 
-Route::post('/createprofile', [\App\Http\Controllers\ProfileController::class, 'createProfile']);
+
+Route::middleware('auth:sanctum')->get('/profile/{user}', [\App\Http\Controllers\ProfileController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
+    return response()->json([
+        'profile' => $request->user()->profile
+    ]);
+});
+
+// Create/Update profile
+Route::middleware('auth:sanctum')->put('/profile', [\App\Http\Controllers\ProfileController::class, 'update']);
+Route::middleware('auth:sanctum')->post('/profile', [\App\Http\Controllers\ProfileController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy']);

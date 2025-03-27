@@ -12,19 +12,23 @@ return new class extends Migration {
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('username')->unique();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('username')->nullable();
             $table->text('about')->nullable();
-            $table->string('fname');
-            $table->string('lname');
+            $table->string('first_name')->nullable();;
+            $table->string('last_name')->nullable();;
             $table->string('email')->unique();
-            $table->string('country');
-            $table->string('address');
-            $table->string('city');
-            $table->string('province');
+            $table->string('country')->nullable();;
+            $table->string('address')->nullable();;
+            $table->string('city')->nullable();;
+            $table->string('province')->nullable();;
             $table->string('profile_image')->nullable();
             $table->string('cover_image')->nullable();
             $table->timestamps();
+
+
         });
+
     }
 
     /**

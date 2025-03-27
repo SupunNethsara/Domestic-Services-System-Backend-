@@ -16,6 +16,10 @@ class Workers extends Model
         'password',
         'role',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     protected static function boot()
     {
         parent::boot();

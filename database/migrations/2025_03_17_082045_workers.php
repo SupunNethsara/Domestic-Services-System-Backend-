@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('workers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('mobile');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->default('worker');  // Add this line
+            $table->string('role')->default('worker');
             $table->timestamps();
         });
     }
@@ -30,3 +32,4 @@ return new class extends Migration
         Schema::dropIfExists('workers');
     }
 };
+

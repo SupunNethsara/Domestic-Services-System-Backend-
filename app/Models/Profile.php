@@ -9,8 +9,31 @@ class Profile extends Model
     protected $table = 'profiles'; // Database table name
 
     protected $fillable = [
-        'username', 'about', 'fname', 'lname', 'email',
-        'country', 'address', 'city', 'province',
-        'profile_image', 'cover_image'
+        'user_id',
+        'username',
+        'about',
+        'first_name',
+        'last_name',
+        'email',
+        'country',
+        'address',
+        'city',
+        'province',
+        'profile_image',
+        'cover_image'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function getIsCompleteAttribute()
+    {
+        return $this->username &&
+            $this->country &&
+            $this->address &&
+            $this->city &&
+            $this->province;
+    }
 }
+
+

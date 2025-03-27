@@ -70,22 +70,28 @@ class RegisterController extends Controller
             'email' => 'nullable|email|max:255|unique:clients,email',
             'password' => 'required|string|min:6|confirmed',
         ]);
-
+        $user = User::create([
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'client',
+        ]);
 
         $client = Client::create([
+            'user_id' => $user->id,
             'first_name' => $request->fname,
             'last_name' => $request->lname,
             'mobile' => $request->mobile,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-
-
-       User::create([
+        $user->profile()->create([
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'client',
+            'first_name' => $request->fname, // Make sure these match your request fields
+            'last_name' => $request->lname,
+            // Other fields can remain null initially
         ]);
+
+
 
         return response()->json([
             'message' => 'Registration successful!',
@@ -102,22 +108,31 @@ class RegisterController extends Controller
             'email' => 'nullable|email|max:255|unique:workers,email',
             'password' => 'required|string|min:6|confirmed',
         ]);
+        $user = User::create([
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'worker',
+        ]);
 
-        // Create the worker entry
         $worker = Workers::create([
+            'user_id' => $user->id,
             'first_name' => $request->fname,
             'last_name' => $request->lname,
             'mobile' => $request->mobile,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-
-
-        User::create([
+        // Create the worker entry
+        $user->profile()->create([
+            'first_name' => $request->fname,
+            'last_name' => $request->lname,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'worker',
+            // Other fields can be null initially
         ]);
+
+
+
+
 
         return response()->json([
             'message' => 'Registration successful!',
