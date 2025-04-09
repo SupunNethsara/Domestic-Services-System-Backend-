@@ -21,3 +21,9 @@ Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
 Route::middleware('auth:sanctum')->put('/profile', [\App\Http\Controllers\ProfileController::class, 'update']);
 Route::middleware('auth:sanctum')->post('/profile', [\App\Http\Controllers\ProfileController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy']);
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/posts', [\App\Http\Controllers\PostController::class, 'store']);
+});
+Route::get('/GetPost' ,[\App\Http\Controllers\PostController::class,'show']);
