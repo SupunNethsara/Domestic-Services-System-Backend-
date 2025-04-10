@@ -25,5 +25,7 @@ Route::middleware('auth:sanctum')->delete('/profile', [\App\Http\Controllers\Pro
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts', [\App\Http\Controllers\PostController::class, 'store']);
+    Route::post('/workpost', [\App\Http\Controllers\PostController::class, 'workerstore']);
 });
 Route::get('/GetPost' ,[\App\Http\Controllers\PostController::class,'show']);
+Route::get('/GetWorkerPost', [\App\Http\Controllers\PostController::class, 'showWorkerPosts']);

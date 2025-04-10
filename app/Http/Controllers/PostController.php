@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\WorkerPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Exception;
+use function Laravel\Prompts\error;
 
 class PostController extends Controller
 {
@@ -35,7 +38,7 @@ class PostController extends Controller
                 'image' => $request->image
             ]);
 
-            // Load the user relationship to return with the post
+
             $post->load('user');
 
             return response()->json([
@@ -89,5 +92,70 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+
+
+
+
+
+
+
+
+    /**  Workers Request Post */
+
+    public function workerstore(Request $request){
+        $validator = Validator::make($request->all(),[
+            'content' => 'required|string',
+            'image' => 'nullable|url'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+       try{
+           $post = WorkerPost::create([
+               'user_id' => Auth::id(),
+               'content' => $request->content,
+               'image' => $request->image
+           ]);
+           $post->load('user');
+
+           return response()->json([
+               'status' => 'success',
+               'message' => 'Post created successfully',
+               'data' => $post
+           ], 201);
+
+       }catch (\Exception $e) {
+           return response()->json([
+               'status' => 'error',
+               'message' => 'Failed to create post',
+               'error' => $e->getMessage()
+           ], 500);
+       }
+
+    }
+//show Worker Post
+    public function showWorkerPosts()
+    {
+        try {
+            $posts = WorkerPost::with(['user.profile'])->get();
+
+            return response()->json([
+                'status' => 'success',
+                'posts' => $posts
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch posts',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -85,7 +85,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
-
+    public function workposts()
+    {
+        return $this->hasMany(WorkerPost::class);
+    }
 
     protected function casts(): array
     {
