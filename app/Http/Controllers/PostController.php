@@ -62,7 +62,6 @@ class PostController extends Controller
     public function show()
     {
         try {
-
             $posts = Post::with(['user.Profile'])->get();
 
             return response()->json([
@@ -85,7 +84,6 @@ class PostController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -93,18 +91,7 @@ class PostController extends Controller
     {
         //
     }
-
-
-
-
-
-
-
-
-
-
     /**  Workers Request Post */
-
     public function workerstore(Request $request){
         $validator = Validator::make($request->all(),[
             'content' => 'required|string',
@@ -138,9 +125,8 @@ class PostController extends Controller
                'error' => $e->getMessage()
            ], 500);
        }
-
     }
-//show Worker Post
+    //show Worker Post
     public function showWorkerPosts()
     {
         try {

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
-            $table->string('role');
+            $table->string('role')->default('admin');
             $table->string('email');
             $table->string('password');
             $table->timestamps();
