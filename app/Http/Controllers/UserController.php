@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Profile;
 use App\Models\User;
 use App\Models\Workers;
 use Illuminate\Http\Request;
@@ -15,11 +16,12 @@ class UserController extends Controller
             $clients = Client::all();
             $workers = Workers::all();
             $users   = User::all();
-
+            $profile = Profile::all();
             return response()->json([
                 'clients' => $clients,
                 'workers' => $workers,
-                'users'   => $users
+                'users'   => $users,
+                'profile' => $profile
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

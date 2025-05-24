@@ -29,3 +29,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::get('/GetPost' ,[\App\Http\Controllers\PostController::class,'show']);
 Route::get('/GetWorkerPost', [\App\Http\Controllers\PostController::class, 'showWorkerPosts']);
+Route::get('/allposts', [\App\Http\Controllers\PostController::class, 'getallposts']);
