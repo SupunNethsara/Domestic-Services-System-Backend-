@@ -1,32 +1,41 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/ClientRegister', [\App\Http\Controllers\RegisterController::class, 'clientregister']);
-Route::post('/WorkerRegister', [\App\Http\Controllers\RegisterController::class, 'workerregister']);
-Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-Route::middleware('auth:sanctum')->get('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
-Route::post('/admin-register', [\App\Http\Controllers\AdminController::class, 'Adminregister']);
+Route::post('/ClientRegister', [RegisterController::class, 'clientregister']);
+Route::post('/WorkerRegister', [RegisterController::class, 'workerregister']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout']);
+Route::get('/adminlogout', [AuthController::class, 'adminlogout']);
+Route::post('/admin-register', [AdminController::class, 'Adminregister']);
 
 //users
-Route::middleware('auth:sanctum')->get('/profile/{user}', [\App\Http\Controllers\ProfileController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/profile/{user}', [ProfileController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
     return response()->json([
         'profile' => $request->user()->profile
     ]);
 });
-Route::get('/GetUsers', [\App\Http\Controllers\UserController::class, 'FetchUserData']);
+Route::get('/GetUsers', [UserController::class, 'FetchUserData']);
 // Create/Update profile
-Route::middleware('auth:sanctum')->put('/profile', [\App\Http\Controllers\ProfileController::class, 'update']);
-Route::middleware('auth:sanctum')->post('/profile', [\App\Http\Controllers\ProfileController::class, 'store']);
-Route::middleware('auth:sanctum')->delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy']);
+Route::middleware('auth:sanctum')->put('/profile', [ProfileController::class, 'update']);
+Route::middleware('auth:sanctum')->post('/profile', [ProfileController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/profile', [ProfileController::class, 'destroy']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/posts', [\App\Http\Controllers\PostController::class, 'store']);
-    Route::post('/workpost', [\App\Http\Controllers\PostController::class, 'workerstore']);
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::post('/workpost', [PostController::class, 'workerstore']);
 });
-Route::get('/GetPost' ,[\App\Http\Controllers\PostController::class,'show']);
-Route::get('/GetWorkerPost', [\App\Http\Controllers\PostController::class, 'showWorkerPosts']);
-Route::get('/allposts', [\App\Http\Controllers\PostController::class, 'getallposts']);
+Route::get('/GetPost' ,[PostController::class,'show']);
+Route::get('/GetWorkerPost', [PostController::class, 'showWorkerPosts']);
+Route::post('/postAvailability', [WorkerController::class, 'postAvailableData']);
+Route::get('/allposts', [PostController::class, 'getallposts']);

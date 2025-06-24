@@ -19,27 +19,20 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-
-
-        //create token
         $token = $user->createToken('auth_token')->plainTextToken;
-
 
         return response()->json([
             'message' => 'Login Successful',
             'role' => $user->role,
+            'id'=>$user->id,
             'token' => $token
         ]);
     }
-
-    //logout
-
     public function logout(Request $request)
     {
-        // Revoke the token that was used to authenticate the current request...
         $request->user()->currentAccessToken()->delete();
-
         return response()->json(['message' => 'Logout Successful']);
     }
+
 
 }
