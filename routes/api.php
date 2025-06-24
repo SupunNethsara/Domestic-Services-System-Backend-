@@ -38,4 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/GetPost' ,[PostController::class,'show']);
 Route::get('/GetWorkerPost', [PostController::class, 'showWorkerPosts']);
 Route::post('/postAvailability', [WorkerController::class, 'postAvailableData']);
+Route::get('/getAvailability/{user_id}', [WorkerController::class, 'getAvailableData']);
 Route::get('/allposts', [PostController::class, 'getallposts']);
