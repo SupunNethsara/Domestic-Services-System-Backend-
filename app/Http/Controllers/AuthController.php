@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
