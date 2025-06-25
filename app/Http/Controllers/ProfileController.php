@@ -82,7 +82,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Profile;
+use App\Models\Workers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -104,10 +106,25 @@ class ProfileController extends Controller
                 ], 404);
             }
 
-            return response()->json([
+            $responseData = [
                 'profile' => $profile,
                 'profile_complete' => $profile->is_complete
-            ]);
+            ];
+            $worker = Workers::where('email', $profile->email)->first();
+            $clients = Client::where('email', $profile->email)->first();
+            if ($worker) {
+                $profileData = $profile->toArray();
+                $profileData['mobile'] = $worker->mobile;
+
+                $responseData['profile'] = $profileData;
+            }
+            elseif($clients){
+                $profileData = $profile->toArray();
+                $profileData['mobile'] = $clients->mobile;
+
+                $responseData['profile'] = $profileData;
+            }
+            return response()->json($responseData);
 
         } catch (\Exception $e) {
             Log::error('Profile fetch error: ' . $e->getMessage());
@@ -117,10 +134,6 @@ class ProfileController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Create a new profile for the authenticated user
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -145,7 +158,6 @@ class ProfileController extends Controller
         }
 
         try {
-            // Check if profile already exists
             if ($request->user()->profile) {
                 return response()->json([
                     'message' => 'Profile already exists',
