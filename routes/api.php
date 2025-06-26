@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/ClientRegister', [RegisterController::class, 'clientregister']);
@@ -42,3 +44,13 @@ Route::get('/getAvailability/{user_id}', [WorkerController::class, 'getAvailable
 Route::delete('/deleteAvailability/{user_id}', [WorkerController::class, 'deleteAvailableData']);
 Route::get('/getAvailabilitytoClients', [WorkerController::class, 'getAvailableDatatoClients']);
 Route::get('/allposts', [PostController::class, 'getallposts']);
+
+//chat
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/send-message', [ChatController::class, 'sendMessage']);
+    Route::get('/messages/{workerId}', [ChatController::class, 'getMessages']);
+});
+
+Route::post('/broadcasting/auth', function () {
+    return Broadcast::auth(request());
+})->middleware(['auth:sanctum']);
