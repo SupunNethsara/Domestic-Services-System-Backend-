@@ -3,15 +3,18 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
+use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-
+//Register logouts
 Route::post('/ClientRegister', [RegisterController::class, 'clientregister']);
 Route::post('/WorkerRegister', [RegisterController::class, 'workerregister']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -54,3 +57,16 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/broadcasting/auth', function () {
     return Broadcast::auth(request());
 })->middleware(['auth:sanctum']);
+
+Route::post('/messages/{clientId}/mark-read', function ($clientId) {
+    $workerId = Auth::id();
+
+    Message::where('sender_id', $clientId)
+        ->where('receiver_id', $workerId)
+        ->whereNull('read_at')
+        ->update(['read_at' => now()]);
+
+    return response()->json(['success' => true]);
+})->middleware('auth:sanctum');
+//Clients
+Route::get('/getAllClients', [ClientController::class,'getDataToWorkersChat']);

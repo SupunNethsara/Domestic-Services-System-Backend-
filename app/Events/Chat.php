@@ -20,9 +20,8 @@ class Chat implements ShouldBroadcast
 
     public function broadcastOn()
     {
-//        return new PrivateChannel('chat.'.$this->chatData['receiver_id']);
         new PrivateChannel('chat.user.'.$this->chatData['sender_id']);
-        new PrivateChannel('chat.user.'.$this->chatData['receiver_id']) ;
+        new PrivateChannel('chat.user.'.$this->chatData['receiver_id']);
     }
 
     public function broadcastAs()
