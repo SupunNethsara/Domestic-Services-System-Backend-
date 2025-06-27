@@ -50,4 +50,5 @@ class RightSideBarsController extends Controller
             ], 500);
         }
     }
+
 }

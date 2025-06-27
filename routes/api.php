@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RightSideBarsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserStatusController;
 use App\Http\Controllers\WorkerController;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -72,3 +73,7 @@ Route::post('/messages/{clientId}/mark-read', function ($clientId) {
 //Clients
 Route::get('/getAllClients', [ClientController::class,'getDataToWorkersChat']);
 Route::get('/getTopRatedServices', [RightSideBarsController::class,'getTopRatedServices']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/user/status', [UserStatusController::class, 'updateStatus']);
+    Route::get('/online-users', [UserStatusController::class, 'getOnlineUsers']);
+});

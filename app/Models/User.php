@@ -89,7 +89,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(WorkerPost::class);
     }
+    public function getIsOnlineAttribute()
+    {
+        if (!$this->status) return false;
 
+        return $this->status->status === 'online' &&
+            $this->status->last_seen_at > now()->subMinutes(5);
+    }
     protected function casts(): array
     {
         return [

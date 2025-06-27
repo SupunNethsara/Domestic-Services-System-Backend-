@@ -55,6 +55,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\UserStatus;
 use App\Models\Workers;
 use App\Models\User; // Import the User model
 use Illuminate\Http\Request;
@@ -84,15 +85,17 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+
         $user->profile()->create([
             'email' => $request->email,
-            'first_name' => $request->fname, // Make sure these match your request fields
+            'first_name' => $request->fname,
             'last_name' => $request->lname,
-            // Other fields can remain null initially
         ]);
-
-
-
+        UserStatus::create([
+            'user_id' => $user->id,
+            'status' => 'offline',
+            'last_seen_at' => now()
+        ]);
         return response()->json([
             'message' => 'Registration successful!',
             'data' => $client,
@@ -122,18 +125,16 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        // Create the worker entry
         $user->profile()->create([
             'first_name' => $request->fname,
             'last_name' => $request->lname,
             'email' => $request->email,
-            // Other fields can be null initially
+            ]);
+        UserStatus::create([
+            'user_id' => $user->id,
+            'status' => 'offline',
+            'last_seen_at' => now()
         ]);
-
-
-
-
-
         return response()->json([
             'message' => 'Registration successful!',
             'data' => $worker,
