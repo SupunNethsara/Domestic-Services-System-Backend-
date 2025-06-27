@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\RightSideBarsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
 use App\Models\Message;
@@ -70,3 +71,4 @@ Route::post('/messages/{clientId}/mark-read', function ($clientId) {
 })->middleware('auth:sanctum');
 //Clients
 Route::get('/getAllClients', [ClientController::class,'getDataToWorkersChat']);
+Route::get('/getTopRatedServices', [RightSideBarsController::class,'getTopRatedServices']);
