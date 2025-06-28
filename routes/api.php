@@ -49,7 +49,7 @@ Route::get('/getAvailability/{user_id}', [WorkerController::class, 'getAvailable
 Route::delete('/deleteAvailability/{user_id}', [WorkerController::class, 'deleteAvailableData']);
 Route::get('/getAvailabilitytoClients', [WorkerController::class, 'getAvailableDatatoClients']);
 Route::get('/allposts', [PostController::class, 'getallposts']);
-
+Route::delete('/deletePost/{id}', [PostController::class, 'destroy']);
 //chat
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/send-message', [ChatController::class, 'sendMessage']);

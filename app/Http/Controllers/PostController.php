@@ -35,7 +35,6 @@ class PostController extends Controller
     }
     public function store(Request $request)
     {
-        // Validate the request
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
             'image' => 'nullable|url'
@@ -154,9 +153,35 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $post = Post::find($id);
+            $workerPost = WorkerPost::find($id);
+
+            if (!$post && !$workerPost) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Post not found'
+                ], 404);
+            }
+
+            $postToDelete = $post ?? $workerPost;
+
+            $postToDelete->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Post deleted successfully'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to delete post',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
     /**  Workers Request Post */
 
