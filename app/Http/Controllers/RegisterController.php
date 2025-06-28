@@ -73,6 +73,8 @@ class RegisterController extends Controller
         ]);
         $user = User::create([
             'email' => $request->email,
+            'first_name' => $request->fname,
+            'last_name' => $request->lname,
             'password' => bcrypt($request->password),
             'role' => 'client',
         ]);
@@ -113,6 +115,8 @@ class RegisterController extends Controller
         ]);
         $user = User::create([
             'email' => $request->email,
+            'first_name' => $request->fname,
+            'last_name' => $request->lname,
             'password' => bcrypt($request->password),
             'role' => 'worker',
         ]);
