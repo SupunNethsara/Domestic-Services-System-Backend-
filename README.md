@@ -12,9 +12,11 @@ This is the backend of the Domestic Services Web App, built using Laravel. It ha
 
 ✅ Service Request Management
 
+✅ laravel Pusher and echo based Chat system and user online status
+
 ✅ Profile Management
 
-✅ Real-time Chat API
+✅ Real-time Chat API (laravel echo & Pusher)
 
 ✅ Cloudinary Integration for Image Uploads
 
