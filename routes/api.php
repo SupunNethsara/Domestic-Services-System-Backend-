@@ -48,6 +48,7 @@ Route::post('/postAvailability', [WorkerController::class, 'postAvailableData'])
 Route::get('/getAvailability/{user_id}', [WorkerController::class, 'getAvailableData']);
 Route::delete('/deleteAvailability/{user_id}', [WorkerController::class, 'deleteAvailableData']);
 Route::get('/getAvailabilitytoClients', [WorkerController::class, 'getAvailableDatatoClients']);
+Route::get('/AvailabilityToRequests', [ClientController::class, 'getWorkersDetailsForRequest']);
 Route::get('/allposts', [PostController::class, 'getallposts']);
 Route::delete('/deletePost/{id}', [PostController::class, 'destroy']);
 //chat

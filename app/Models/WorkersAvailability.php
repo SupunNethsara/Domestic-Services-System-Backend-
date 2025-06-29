@@ -28,4 +28,8 @@ class WorkersAvailability extends Model
         'preferences' => 'array',
         'expected_rate' => 'array',
     ];
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class, 'worker_id', 'user_id');
+    }
 }
