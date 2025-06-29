@@ -20,8 +20,6 @@ class UserStatusController extends Controller
         $user = Auth::user();
         $status = $request->status;
 
-        Log::info("Updating status for user {$user->id} to {$status}");
-
         $userStatus = UserStatus::updateOrCreate(
             ['user_id' => $user->id],
             ['status' => $status, 'last_seen_at' => now()]
