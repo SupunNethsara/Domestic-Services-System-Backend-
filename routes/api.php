@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RightSideBarsController;
+use App\Http\Controllers\ServiceRequestControll;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserStatusController;
 use App\Http\Controllers\WorkerController;
@@ -77,4 +78,10 @@ Route::get('/getTopRatedServices', [RightSideBarsController::class,'getTopRatedS
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/status', [UserStatusController::class, 'updateStatus']);
     Route::get('/online-users', [UserStatusController::class, 'getOnlineUsers']);
+});
+//Service Request
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/service-requests', [ServiceRequestControll::class, 'store']);
+    Route::post('/getClientRequestStatus' , [ServiceRequestControll::class , 'respondToClient']);
 });
