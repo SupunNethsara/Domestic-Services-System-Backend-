@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('users');
             $table->foreignId('worker_id')->constrained('users');
             $table->text('message')->nullable();
+            $table->text('worker_message')->nullable();
             $table->string('status')->default('pending');
             $table->dateTime('requested_date');
             $table->text('special_requirements')->nullable();

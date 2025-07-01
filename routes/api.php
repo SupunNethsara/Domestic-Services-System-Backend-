@@ -80,8 +80,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/online-users', [UserStatusController::class, 'getOnlineUsers']);
 });
 //Service Request
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/service-requests', [ServiceRequestControll::class, 'store']);
+    Route::post('/update-send-request-to-workers' , [ServiceRequestControll::class , 'updateSendRequestToWorkers']);
     Route::post('/getClientRequestStatus' , [ServiceRequestControll::class , 'respondToClient']);
+    Route::get('/get-send-request-to-workers', [ServiceRequestControll::class, 'getSendRequestToWorkers']);
 });

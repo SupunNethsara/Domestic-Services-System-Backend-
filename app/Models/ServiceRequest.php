@@ -10,6 +10,7 @@ class ServiceRequest extends Model
         'client_id',
         'worker_id',
         'message',
+        'worker_message',
         'status',
         'requested_date',
         'special_requirements'

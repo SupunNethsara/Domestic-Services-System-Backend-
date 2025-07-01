@@ -32,6 +32,7 @@ class ServiceRequestControll extends Controller
             'request' => $request
         ], 201);
     }
+
     public function respondToClient(Request $request)
     {
         $request->validate([
@@ -42,4 +43,53 @@ class ServiceRequestControll extends Controller
 
         return response()->json($statuses);
     }
+
+    public function getSendRequestToWorkers(Request $request)
+    {
+        $workerId = $request->user_id;
+        $serviceRequests = ServiceRequest::where('worker_id', $workerId)
+            ->with(['client.profile'])
+            ->get();
+        $data = $serviceRequests->map(function ($request) {
+            return [
+                'id' => $request->id,
+                'message' => $request->message,
+                'status' => $request->status,
+                'requested_date' => $request->requested_date,
+                'special_requirements' => $request->special_requirements,
+                'client' => [
+                    'id' => $request->client->id,
+                    'name' => $request->client->name ?? null,
+                    'profile' => $request->client->profile ?? null
+                ]
+            ];
+        }
+        );
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
+    public function updateSendRequestToWorkers(Request $request){
+        $validated = $request->validate([
+            'request_id' => 'required|exists:service_requests,id',
+            'status' => 'required|in:pending,accepted,rejected',
+            'worker_message' => 'nullable|string '
+        ]);
+        $serviceRequest = ServiceRequest::where('id', $validated['request_id'])
+            ->where('worker_id', Auth::id())
+            ->firstOrFail();
+        $updateData = ['status' => $validated['status']];
+        if (isset($validated['worker_message'])) {
+            $updateData['worker_message'] = $validated['worker_message'];
+        }
+        $serviceRequest->update($updateData);
+        return response()->json([
+            'success' => true,
+            'message' => 'Request status updated successfully',
+            'request' => $serviceRequest
+        ]);
+    }
+
 }
