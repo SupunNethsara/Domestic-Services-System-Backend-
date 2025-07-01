@@ -81,6 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 //Service Request
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/ClientStoreRequest' ,[ServiceRequestControll::class , 'ClientStoreRequest']);
     Route::post('/service-requests', [ServiceRequestControll::class, 'store']);
     Route::post('/update-send-request-to-workers' , [ServiceRequestControll::class , 'updateSendRequestToWorkers']);
     Route::post('/getClientRequestStatus' , [ServiceRequestControll::class , 'respondToClient']);

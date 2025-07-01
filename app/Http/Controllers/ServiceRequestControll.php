@@ -2,13 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientJobRequest;
 use App\Models\ServiceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ServiceRequestControll extends Controller
 {
+    public function ClientStoreRequest (Request $request)
+    {
+        $validated = $request->validate([
+            'jobTitles' => 'required|array|min:1',
+            'customJobTitle' => 'nullable|string|max:255',
+            'location' => 'required|string|max:255',
+            'salaryRange' => 'required|string|max:255',
+            'description' => 'required|string',
+            'startDate' => 'required|date|after_or_equal:today',
+            'endDate' => 'nullable|date|after_or_equal:startDate',
+            'jobType' => 'required|in:one-time,recurring',
+            'frequency' => 'required_if:jobType,recurring|nullable|in:daily,weekly,bi-weekly,monthly',
+            'hasTransportation' => 'boolean',
+            'backgroundCheck' => 'boolean',
+            'interviewRequired' => 'boolean',
+        ]);
 
+        $jobRequest = ClientJobRequest::create([
+            'client_id' => Auth::id(),
+            'job_titles' => $validated['jobTitles'],
+            'custom_job_title' => $validated['customJobTitle'] ?? null,
+            'location' => $validated['location'],
+            'salary_range' => $validated['salaryRange'],
+            'description' => $validated['description'],
+            'start_date' => $validated['startDate'],
+            'end_date' => $validated['endDate'] ?? null,
+            'job_type' => $validated['jobType'],
+            'frequency' => $validated['frequency'] ?? null,
+            'has_transportation' => $validated['hasTransportation'] ?? false,
+            'background_check' => $validated['backgroundCheck'] ?? false,
+            'interview_required' => $validated['interviewRequired'] ?? false,
+            'status' => 'open'
+        ]);
+
+        return response()->json([
+            'message' => 'Job request created successfully',
+            'data' => $jobRequest
+        ], 201);
+    }
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -38,10 +77,15 @@ class ServiceRequestControll extends Controller
         $request->validate([
             'worker_id' => 'required|integer',
         ]);
-        $statuses = ServiceRequest::where('worker_id', $request->worker_id)
-            ->pluck('status');
 
-        return response()->json($statuses);
+        $clientId = Auth::id();
+
+        $status = ServiceRequest::where('worker_id', $request->worker_id)
+            ->where('client_id', $clientId)
+            ->latest()
+            ->first();
+
+        return response()->json($status ? [$status->status] : []);
     }
 
     public function getSendRequestToWorkers(Request $request)
