@@ -48,6 +48,24 @@ class ServiceRequestControll extends Controller
             'data' => $jobRequest
         ], 201);
     }
+
+    public function getClientStoreRequest(Request $request)
+    {
+        $clientId = Auth::id();
+        $clientRequests = ClientJobRequest::where('client_id', $clientId)
+            ->with(['client.profile'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'data' => $clientRequests
+        ]);
+    }
+    public function getClientRequestAll(Request $request){
+        $clientRequestsAll = ClientJobRequest::with('client.profile')->get();
+
+        return response()->json($clientRequestsAll);
+    }
     public function store(Request $request)
     {
         $validated = $request->validate([
