@@ -38,6 +38,7 @@ class ClientJobRequest extends Model
 
     public function client()
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->belongsTo(Client::class, 'client_id', 'user_id');
     }
+
 }

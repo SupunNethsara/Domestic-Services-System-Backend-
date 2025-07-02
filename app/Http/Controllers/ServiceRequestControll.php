@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClientJobRequest;
 use App\Models\ServiceRequest;
+use App\Models\WorkersAvailability;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,6 +66,30 @@ class ServiceRequestControll extends Controller
         $clientRequestsAll = ClientJobRequest::with('client.profile')->get();
 
         return response()->json($clientRequestsAll);
+    }
+    public function getActiveJobsDetails(Request $request)
+    {
+        try {
+            $clientId = Auth::id();
+
+            $clientRequests = ClientJobRequest::where('client_id', $clientId)
+                ->with([
+                    'client' => function($query) {
+                        $query->select('user_id', 'first_name', 'last_name', 'mobile');
+                    },
+                    'client.profile',
+                ])
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json($clientRequests);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Server Error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
     public function store(Request $request)
     {

@@ -88,4 +88,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/update-send-request-to-workers' , [ServiceRequestControll::class , 'updateSendRequestToWorkers']);
     Route::post('/getClientRequestStatus' , [ServiceRequestControll::class , 'respondToClient']);
     Route::get('/get-send-request-to-workers', [ServiceRequestControll::class, 'getSendRequestToWorkers']);
+    Route::get('/getActiveJobs' , [ServiceRequestControll::class ,'getActiveJobsDetails']);
 });
