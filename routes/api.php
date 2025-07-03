@@ -12,6 +12,7 @@ use App\Http\Controllers\ServiceRequestControll;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserStatusController;
 use App\Http\Controllers\WorkerController;
+use App\Http\Controllers\WorkerPaymentController;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -90,3 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-send-request-to-workers', [ServiceRequestControll::class, 'getSendRequestToWorkers']);
     Route::get('/getActiveJobs' , [ServiceRequestControll::class ,'getActiveJobsDetails']);
 });
+
+Route::post('/worker-payments', [WorkerPaymentController::class, 'store']);
+Route::post('/stripe/webhook', [WorkerPaymentController::class, 'handleStripeWebhook']);
+Route::get('/worker-payments/all', [WorkerPaymentController::class, 'getWorkerPaymentsAll']);
