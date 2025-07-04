@@ -70,4 +70,5 @@ class WorkerPaymentController extends Controller
 
         return response()->json(['payments' => $payments]);
     }
+
 }

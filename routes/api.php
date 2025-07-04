@@ -11,6 +11,7 @@ use App\Http\Controllers\RightSideBarsController;
 use App\Http\Controllers\ServiceRequestControll;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserStatusController;
+use App\Http\Controllers\WorkerBankController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Controllers\WorkerPaymentController;
 use App\Models\Message;
@@ -95,3 +96,9 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/worker-payments', [WorkerPaymentController::class, 'store']);
 Route::post('/stripe/webhook', [WorkerPaymentController::class, 'handleStripeWebhook']);
 Route::get('/worker-payments/all', [WorkerPaymentController::class, 'getWorkerPaymentsAll']);
+Route::post('/workers-bank-details', [WorkerBankController::class, 'store']);
+Route::get('/workers-bank-details/{id}', [WorkerBankController::class, 'show']);
+Route::delete('/workers-bank-details/{id}', [WorkerBankController::class, 'destroy']);
+
+//Ratings to Workers
+Route::post('/ratings', [ClientController::class, 'AddRatingToWorker'])->middleware('auth:api');

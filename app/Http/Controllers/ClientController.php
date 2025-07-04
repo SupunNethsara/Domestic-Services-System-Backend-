@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\WorkerRating;
 use App\Models\WorkersAvailability;
 use Illuminate\Http\Request;
 
@@ -49,5 +50,26 @@ class ClientController extends Controller
         })->filter()->values();
 
         return response()->json($result);
+    }
+    public function AddRatingToWorker(Request $request)
+    {
+        $validated = $request->validate([
+            'client_id' => 'required|exists:users,id',
+            'worker_id' => 'required|exists:users,id',
+            'rating' => 'required|integer|between:1,5',
+            'review' => 'nullable|string|max:500',
+        ]);
+
+        $rating = WorkerRating::create([
+            'worker_id' => $validated['worker_id'],
+            'user_id' => $validated['client_id'],
+            'rating' => $validated['rating'],
+            'review' => $validated['review'] ?? null,
+        ]);
+
+        return response()->json([
+            'message' => 'Rating added successfully',
+            'rating' => $rating
+        ]);
     }
 }
