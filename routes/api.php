@@ -92,9 +92,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-send-request-to-workers', [ServiceRequestControll::class, 'getSendRequestToWorkers']);
     Route::get('/getActiveJobs' , [ServiceRequestControll::class ,'getActiveJobsDetails']);
 });
-
+//payment
+Route::get('/payment-status/{paymentId}', [WorkerPaymentController::class, 'checkPaymentStatus']);
 Route::post('/worker-payments', [WorkerPaymentController::class, 'store']);
 Route::post('/stripe/webhook', [WorkerPaymentController::class, 'handleStripeWebhook']);
+Route::post('/manual-verify-payment/{paymentId}', [WorkerPaymentController::class, 'manualVerifyPayment']);
 Route::get('/worker-payments/all', [WorkerPaymentController::class, 'getWorkerPaymentsAll']);
 Route::post('/workers-bank-details', [WorkerBankController::class, 'store']);
 Route::get('/workers-bank-details/{id}', [WorkerBankController::class, 'show']);
