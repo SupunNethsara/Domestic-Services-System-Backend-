@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\WorkerPayment;
 use Exception;
 use Illuminate\Http\Request;
-use Log;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Stripe\Transfer;
@@ -61,7 +60,6 @@ class WorkerPaymentController extends Controller
             ]);
 
         } catch (Exception $e) {
-            Log::error("Payment status check failed for ID {$paymentId}: " . $e->getMessage());
             return response()->json([
                 'error' => 'Payment not found',
                 'message' => $e->getMessage()
@@ -79,17 +77,11 @@ class WorkerPaymentController extends Controller
                 $payload, $sig_header, $endpoint_secret
             );
         } catch(\Exception $e) {
-            \Log::error('Webhook error: '.$e->getMessage());
             return response()->json(['error' => 'Invalid signature'], 403);
         }
-
-        // Handle specific event types
         switch ($event->type) {
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object;
-                \Log::info('Processing payment_intent.succeeded for: '.$paymentIntent->id);
-
-                // Find by stripe_payment_id if metadata is missing
                 $payment = WorkerPayment::where('stripe_payment_id', $paymentIntent->id)->first();
 
                 if (!$payment && isset($paymentIntent->metadata->worker_payment_id)) {
@@ -99,14 +91,11 @@ class WorkerPaymentController extends Controller
                 if ($payment) {
                     $payment->status = 'paid';
                     $payment->save();
-                    $this->transferToWorker($payment);
-                    \Log::info('Updated payment '.$payment->id.' to paid status');
+
                 } else {
-                    \Log::error('Payment not found for Stripe ID: '.$paymentIntent->id);
+                    return response()->json(['error' => 'Payment not found'], 404);
                 }
                 break;
-
-            // ... other cases ...
         }
 
         return response()->json(['status' => 'success']);
@@ -119,8 +108,6 @@ class WorkerPaymentController extends Controller
         if ($payment) {
             $payment->transfer_status = $transfer->status;
             $payment->save();
-
-            Log::info("Transfer {$transfer->id} updated to status: {$transfer->status}");
         }
     }
     private function handlePaymentFailure($paymentIntent)
@@ -131,34 +118,6 @@ class WorkerPaymentController extends Controller
         if ($payment) {
             $payment->status = 'failed';
             $payment->save();
-        }
-    }
-
-    private function transferToWorker(WorkerPayment $payment)
-    {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-
-
-        $worker = User::find($payment->id);
-
-        try {
-            $transfer = Transfer::create([
-                'amount' => intval($payment->amount * 100 * 0.95),
-                'currency' => 'lkr',
-                'destination' => $worker->stripe_account_id,
-                'description' => 'Payment for services',
-                'metadata' => [
-                    'client_payment_id' => $payment->id,
-                    'client_id' => $payment->client_id
-                ]
-            ]);
-
-            $payment->transfer_id = $transfer->id;
-            $payment->save();
-
-        } catch (Exception $e) {
-            Log::error("Transfer failed for payment ID {$payment->id}: " . $e->getMessage());
-            return response()->json(['error' => 'Transfer failed'], 500);
         }
     }
     public function getWorkerPaymentsAll(Request $request)
@@ -180,14 +139,13 @@ class WorkerPaymentController extends Controller
             $payment = WorkerPayment::findOrFail($paymentId);
 
             if ($payment->status === 'pending' && $payment->stripe_payment_id) {
-                // Check with Stripe directly
                 Stripe::setApiKey(env('STRIPE_SECRET'));
                 $paymentIntent = PaymentIntent::retrieve($payment->stripe_payment_id);
 
                 if ($paymentIntent->status === 'succeeded') {
                     $payment->status = 'paid';
                     $payment->save();
-                    $this->transferToWorker($payment);
+
 
                     return response()->json([
                         'status' => 'paid',
