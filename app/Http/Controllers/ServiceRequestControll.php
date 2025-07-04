@@ -155,7 +155,8 @@ class ServiceRequestControll extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            'data' => $data,
+            'requestCount' => $data->count()
         ]);
     }
     public function updateSendRequestToWorkers(Request $request){

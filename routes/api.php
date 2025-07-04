@@ -104,3 +104,4 @@ Route::delete('/workers-bank-details/{id}', [WorkerBankController::class, 'destr
 
 //Ratings to Workers
 Route::post('/ratings', [ClientController::class, 'AddRatingToWorker'])->middleware('auth:api');
+Route::get('/worker-ratings', [ClientController::class, 'getAllWorkerRatings']);

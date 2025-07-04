@@ -15,11 +15,11 @@ class WorkerRating extends Model
 
     public function worker()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(\App\Models\User::class, 'worker_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 }

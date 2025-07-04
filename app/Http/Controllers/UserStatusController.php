@@ -14,6 +14,7 @@ class UserStatusController extends Controller
     public function updateStatus(Request $request)
     {
         $request->validate([
+            'user_id' => 'required|exists:users,id',
             'status' => 'required|in:online,offline,away'
         ]);
 
@@ -21,7 +22,7 @@ class UserStatusController extends Controller
         $status = $request->status;
 
         $userStatus = UserStatus::updateOrCreate(
-            ['user_id' => $user->id],
+            ['user_id' => $user->user_id],
             ['status' => $status, 'last_seen_at' => now()]
         );
 
@@ -29,10 +30,11 @@ class UserStatusController extends Controller
 
         return response()->json([
             'message' => 'Status updated successfully',
-            'user_id' => $user->id,
+            'user_id' => $user->user_id,
             'new_status' => $status
         ]);
     }
+
     public function getOnlineUsers()
     {
         $onlineUsers = UserStatus::with('user')

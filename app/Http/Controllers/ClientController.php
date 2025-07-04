@@ -72,4 +72,14 @@ class ClientController extends Controller
             'rating' => $rating
         ]);
     }
+
+    public function getAllWorkerRatings()
+    {
+        $ratings = WorkerRating::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $ratings
+        ]);
+    }
 }
