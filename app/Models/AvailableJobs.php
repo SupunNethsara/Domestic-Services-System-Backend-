@@ -10,6 +10,7 @@ class AvailableJobs extends Model
 
     protected $fillable = [
         'id',
+        'client_id',
         'title',
         'category',
         'message',

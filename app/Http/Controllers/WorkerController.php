@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WorkersAvailabilityRequest;
+use App\Models\AvailableJobs;
 use App\Models\WorkersAvailability;
+use http\Env\Response;
 use Illuminate\Http\Request;
+use mysql_xdevapi\Exception;
 
 class WorkerController extends Controller
 {
@@ -63,6 +66,35 @@ class WorkerController extends Controller
         ]);
     }
     public function makeRequestToClient (request $request){
+        try {
+            $user = auth()->user();
+            $request->validate([
+                'client_id' => 'required|exists:clients,id',
+                'title'     => 'required|string|max:255',
+                'category'  => 'required|string|max:100',
+                'message'   => 'required|string',
+            ]);
 
+            $requestJobs = AvailableJobs::create([
+                'client_id' => $request->client_id,
+                'worker_id' => $user->id,
+                'title'     => $request->title,
+                'category'  => $request->category,
+                'message'   => $request->message,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $requestJobs,
+                'message' => 'Request sent successfully'
+            ]);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed save Request',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

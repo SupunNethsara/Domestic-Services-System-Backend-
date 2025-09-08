@@ -12,11 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('available_jobs', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
+
+            $table->foreignId('client_id')
+                ->constrained('clients')
+                ->onDelete('cascade');
+
             $table->string('title');
             $table->string('category');
-            $table->string('message');
+            $table->text('message');
 
+            $table->timestamps();
         });
     }
 
