@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::get('/GetPost' ,[PostController::class,'show']);
 Route::get('/GetWorkerPost', [PostController::class, 'showWorkerPosts']);
+Route::get('/GetPostCount', [PostController::class, 'getPostCount']);
 Route::post('/postAvailability', [WorkerController::class, 'postAvailableData']);
 Route::get('/getAvailability/{user_id}', [WorkerController::class, 'getAvailableData']);
 Route::delete('/deleteAvailability/{user_id}', [WorkerController::class, 'deleteAvailableData']);
@@ -105,3 +106,7 @@ Route::delete('/workers-bank-details/{id}', [WorkerBankController::class, 'destr
 //Ratings to Workers
 Route::post('/ratings', [ClientController::class, 'AddRatingToWorker'])->middleware('auth:api');
 Route::get('/worker-ratings', [ClientController::class, 'getAllWorkerRatings']);
+
+
+Route::get('/user-count', [UserController::class, 'getUserCount']);
+

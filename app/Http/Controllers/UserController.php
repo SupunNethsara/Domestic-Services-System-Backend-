@@ -30,4 +30,22 @@ class UserController extends Controller
             ], 500);
         }
     }
+    function getUserCount(request $request)
+    {
+        try {
+            $userCount   = User::count();
+            $ClientCount = Client::count();
+            $WorkerCount = Workers::count();
+            return response()->json([
+                'user_count'   => $userCount,
+                'client_count' => $ClientCount,
+                'worker_count' => $WorkerCount
+                ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to fetch user counts',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

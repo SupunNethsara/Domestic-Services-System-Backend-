@@ -33,6 +33,30 @@ class PostController extends Controller
             ], 500);
         }
     }
+    public function getPostCount(request $request){
+        try{
+
+            $allPosts = Post::with(['user.client', 'user.profile'])->get()
+                ->merge(WorkerPost::with(['user.worker', 'user.profile'])->get());
+            return response()->json([
+              'status' => 'success',
+                'post_count' => $allPosts->count(),
+                'posts' => $allPosts
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to fetch post counts',
+                'message' => $e->getMessage()
+            ], 500);
+        }catch (exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch all posts',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

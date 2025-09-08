@@ -62,4 +62,7 @@ class WorkerController extends Controller
             'message' => 'Availability fetched successfully with profile data'
         ]);
     }
+    public function makeRequestToClient (request $request){
+
+    }
 }
