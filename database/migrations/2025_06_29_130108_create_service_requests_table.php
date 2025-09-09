@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('service_requests', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->foreignUuid('client_id')->constrained('users');
             $table->foreignUuid('worker_id')->constrained('users');
             $table->text('message')->nullable();
