@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('job_request_client', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary()->default(\Illuminate\Support\Facades\DB::raw('(UUID())'));
             $table->foreignUuid('client_id')->constrained('users');
             $table->json('job_titles');
             $table->string('custom_job_title')->nullable();
