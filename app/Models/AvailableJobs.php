@@ -9,7 +9,7 @@ class AvailableJobs extends Model
     protected $table = 'available_jobs';
 
     protected $fillable = [
-        'id',
+        'worker_id',
         'client_id',
         'title',
         'category',

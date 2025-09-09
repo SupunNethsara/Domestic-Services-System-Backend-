@@ -67,14 +67,14 @@ class WorkerController extends Controller
     }
     public function makeRequestToClient (request $request){
         try {
-            $user = auth()->user();
+
             $request->validate([
                 'client_id' => 'required|exists:clients,id',
                 'title'     => 'required|string|max:255',
                 'category'  => 'required|string|max:100',
                 'message'   => 'required|string',
             ]);
-
+            $user = auth()->user();
             $requestJobs = AvailableJobs::create([
                 'client_id' => $request->client_id,
                 'worker_id' => $user->id,
