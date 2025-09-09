@@ -12,9 +12,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('worker_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('users');
-            $table->unsignedBigInteger('worker_id');
+            $table->uuid('id');
+            $table->foreignUuid('client_id')->constrained('users');
+            $table->uuid('worker_id');
             $table->decimal('amount', 10, 2);
             $table->string('status')->default('pending');
             $table->string('stripe_payment_id')->nullable();

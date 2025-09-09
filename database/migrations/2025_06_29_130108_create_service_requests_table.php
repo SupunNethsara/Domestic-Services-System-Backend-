@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('service_requests', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('users');
-            $table->foreignId('worker_id')->constrained('users');
+            $table->foreignUuid('client_id')->constrained('users');
+            $table->foreignUuid('worker_id')->constrained('users');
             $table->text('message')->nullable();
             $table->text('worker_message')->nullable();
             $table->string('status')->default('pending');

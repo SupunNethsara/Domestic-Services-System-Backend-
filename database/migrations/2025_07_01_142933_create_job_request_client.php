@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('job_request_client', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('users');
+            $table->uuid('id');
+            $table->foreignUuid('client_id')->constrained('users');
             $table->json('job_titles');
             $table->string('custom_job_title')->nullable();
             $table->string('location');
