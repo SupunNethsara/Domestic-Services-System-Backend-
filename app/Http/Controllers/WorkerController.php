@@ -70,7 +70,7 @@ class WorkerController extends Controller
         try {
 
             $request->validate([
-                'client_id' => 'required|exists:clients,id',
+                'client_id' => 'required|exists:users,id',
                 'title'     => 'required|string|max:255',
                 'category'  => 'required|string|max:100',
                 'message'   => 'required|string',
