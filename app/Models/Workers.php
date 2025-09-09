@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Workers extends Model
 {
@@ -21,13 +22,17 @@ class Workers extends Model
     {
         return $this->belongsTo(User::class);
     }
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($worker) {
-
-
+            if (empty($worker->id)) {
+                $worker->id = (string) Str::uuid();
+            }
             $worker->password = bcrypt($worker->password);
         });
     }

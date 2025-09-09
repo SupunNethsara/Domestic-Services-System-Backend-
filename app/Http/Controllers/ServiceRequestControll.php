@@ -118,7 +118,7 @@ class ServiceRequestControll extends Controller
     public function respondToClient(Request $request)
     {
         $request->validate([
-            'worker_id' => 'required|integer',
+            'worker_id' => 'required|exists:users,id',
         ]);
 
         $clientId = Auth::id();
@@ -133,10 +133,12 @@ class ServiceRequestControll extends Controller
 
     public function getSendRequestToWorkers(Request $request)
     {
-        $workerId = $request->user_id;
+        $workerId = Auth::id(); // 🛡️ safest way: token එකෙන් logged-in user id ගන්න
+
         $serviceRequests = ServiceRequest::where('worker_id', $workerId)
             ->with(['client.profile'])
             ->get();
+
         $data = $serviceRequests->map(function ($request) {
             return [
                 'id' => $request->id,
@@ -147,11 +149,10 @@ class ServiceRequestControll extends Controller
                 'client' => [
                     'id' => $request->client->id,
                     'name' => $request->client->name ?? null,
-                    'profile' => $request->client->profile ?? null
+                    'profile' => $request->client->profile ?? null,
                 ]
             ];
-        }
-        );
+        });
 
         return response()->json([
             'success' => true,
@@ -159,24 +160,28 @@ class ServiceRequestControll extends Controller
             'requestCount' => $data->count()
         ]);
     }
-    public function updateSendRequestToWorkers(Request $request){
+
+    // ✅ Worker එක request එක accept/reject කරන function එක
+    public function updateSendRequestToWorkers(Request $request)
+    {
         $validated = $request->validate([
-            'request_id' => 'required|exists:service_requests,id',
-            'status' => 'required|in:pending,accepted,rejected',
-            'worker_message' => 'nullable|string '
+            'request_id' => 'required|uuid|exists:service_requests,id',
+            'status' => 'required|in:pending,accepted,rejected'
         ]);
+
+        $workerId = Auth::id(); // 🛡️ token එකෙන්ම verify වෙන user id
+
         $serviceRequest = ServiceRequest::where('id', $validated['request_id'])
-            ->where('worker_id', Auth::id())
+            ->where('worker_id', $workerId)
             ->firstOrFail();
-        $updateData = ['status' => $validated['status']];
-        if (isset($validated['worker_message'])) {
-            $updateData['worker_message'] = $validated['worker_message'];
-        }
-        $serviceRequest->update($updateData);
+
+        $serviceRequest->status = $validated['status'];
+        $serviceRequest->save();
+
         return response()->json([
             'success' => true,
-            'message' => 'Request status updated successfully',
-            'request' => $serviceRequest
+            'message' => 'Service request updated successfully',
+            'data' => $serviceRequest
         ]);
     }
 

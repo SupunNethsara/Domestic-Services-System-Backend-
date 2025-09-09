@@ -22,7 +22,7 @@ class WorkersAvailabilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'worker_id' => 'required|integer',
+            'worker_id' => 'required',
             'name' => 'nullable|string',
             'services' => 'nullable|array',
             'availability_type' => 'nullable|string',

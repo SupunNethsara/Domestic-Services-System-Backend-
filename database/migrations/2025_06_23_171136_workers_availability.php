@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('workers_availability', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('worker_id');
+            $table->uuid('id')->primary();
+            $table->uuid('worker_id');
             $table->string('name')->nullable();
             $table->json('services')->nullable();
             $table->string('availability_type')->default('weekly');

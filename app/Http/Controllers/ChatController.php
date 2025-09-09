@@ -13,7 +13,7 @@ class ChatController extends Controller
     {
         $validated = $request->validate([
             'message' => 'required|string|max:1000',
-            'receiver_id' => 'required|integer|exists:users,id'
+            'receiver_id' => 'required|exists:users,id'
         ]);
 
         $message = Message::create([

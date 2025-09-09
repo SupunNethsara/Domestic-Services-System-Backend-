@@ -43,9 +43,17 @@ class WorkerController extends Controller
             'message' => 'Availability fetched successfully'
         ]);
     }
-    public function deleteAvailableData($user_id)
+    public function deleteAvailableData($worker_id)
     {
-        $availability = WorkersAvailability::findOrFail($user_id);
+        $availability = WorkersAvailability::where('worker_id', $worker_id)->first();
+
+        if (!$availability) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No availability found for this worker'
+            ], 404);
+        }
+
         $availability->delete();
 
         return response()->json([

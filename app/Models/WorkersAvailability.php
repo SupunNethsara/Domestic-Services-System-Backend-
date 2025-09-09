@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class WorkersAvailability extends Model
 {
@@ -31,5 +32,15 @@ class WorkersAvailability extends Model
     public function profile()
     {
         return $this->belongsTo(Profile::class, 'worker_id', 'user_id');
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid();
+            }
+        });
     }
 }

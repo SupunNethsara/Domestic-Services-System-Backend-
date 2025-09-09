@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('workers_bank_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('worker_id')->constrained('users');
+            $table->id()->primary();
+            $table->foreignuuid('worker_id')->constrained('users');
             $table->string('account_holder_name');
             $table->string('account_number');
             $table->string('bank_name');

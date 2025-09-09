@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Message extends Model
 {
@@ -39,5 +40,15 @@ class Message extends Model
         if (is_null($this->read_at)) {
             $this->update(['read_at' => now()]);
         }
+    }
+    protected $keyType = 'string';
+    public $incrementing = false;
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (!$model->id) {
+                $model->id = (string) Str::uuid();
+            }
+        });
     }
 }
