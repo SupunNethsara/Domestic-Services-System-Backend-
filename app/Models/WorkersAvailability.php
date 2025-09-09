@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class WorkersAvailability extends Model
 {
@@ -32,4 +33,5 @@ class WorkersAvailability extends Model
     {
         return $this->belongsTo(Profile::class, 'worker_id', 'user_id');
     }
+ 
 }
