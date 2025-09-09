@@ -94,6 +94,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getActiveJobs' , [ServiceRequestControll::class ,'getActiveJobsDetails']);
     Route::post('/updateJobRequest', [WorkerController::class, 'makeRequestToClient'])
         ->middleware('auth:sanctum');
+    Route::get('/getJobRequest', [WorkerController::class, 'getRequestToClient'])
+        ->middleware('auth:sanctum');
 });
 //payment
 Route::get('/payment-status/{paymentId}', [WorkerPaymentController::class, 'checkPaymentStatus']);

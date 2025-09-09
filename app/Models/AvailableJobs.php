@@ -15,4 +15,8 @@ class AvailableJobs extends Model
         'category',
         'message',
     ];
+    public function workerProfile()
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'client_id');
+    }
 }

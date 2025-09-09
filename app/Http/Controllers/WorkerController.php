@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\WorkersAvailabilityRequest;
 use App\Models\AvailableJobs;
+use App\Models\Profile;
 use App\Models\WorkersAvailability;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -97,4 +98,19 @@ class WorkerController extends Controller
             ], 500);
         }
     }
+    public function getRequestToClient(Request $request)
+    {
+        $user = auth()->user();
+
+        $requestJobs = AvailableJobs::with('workerProfile')
+            ->where('client_id', $user->id)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $requestJobs,
+            'message' => 'Request fetched successfully with worker profiles'
+        ]);
+    }
+
 }
