@@ -17,6 +17,6 @@ class AvailableJobs extends Model
     ];
     public function workerProfile()
     {
-        return $this->hasOne(Profile::class, 'user_id', 'client_id');
+        return $this->hasOne(Profile::class, 'user_id', 'worker_id');
     }
 }
